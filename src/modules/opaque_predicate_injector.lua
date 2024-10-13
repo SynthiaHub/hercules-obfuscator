@@ -1,23 +1,26 @@
 local OpaquePredicateInjector = {}
 
-function OpaquePredicateInjector.process(code)
-    local function inject_predicate(block)
-        local predicate = "if (math.random() > 0) then "
-        local end_predicate = " end"
-        return predicate .. block .. end_predicate
-    end
+local predicates = {
+    "if (math.sin(math.pi) == 0) then ",
+    "if (3 & 1 == 1) then ",
+    "if (5^2 - 2^5 == 9) then ",
+    "if ((10 > 5 and 2 < 3) or (7 == 7)) then ",
+    "if (#('abc' .. 'def') == 6) then ",
+}
 
-    local processed_code, gsub_error = code:gsub("(.-);", function(block)
-        local success, result = pcall(inject_predicate, block)
-        if not success then
-            error("Error injecting predicate: " .. result)
-        end
-        return result .. ";"
+local function inject_predicate(block)
+    local predicate = predicates[math.random(#predicates)]
+    return predicate .. block .. " end"
+end
+
+function OpaquePredicateInjector.process(code)
+    local processed_code = code:gsub("([ \t]*)(local%s+[^\n;]*;)", function(ws, var_def)
+        return ws .. inject_predicate(var_def)
     end)
 
-    if not processed_code then
-        error("Failed to process code: " .. gsub_error)
-    end
+    processed_code = processed_code:gsub("([ \t]*)(return%s+[^\n;]+;)", function(ws, return_stmt)
+        return ws .. inject_predicate(return_stmt)
+    end)
 
     return processed_code
 end

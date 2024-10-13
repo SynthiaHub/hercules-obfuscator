@@ -5,33 +5,36 @@ local config = {}
 config.settings = {
     output_suffix = "_obfuscated.lua",
     watermark_enabled = true,
+    final_print = true,
     control_flow = {
         enabled = true,
-        max_fake_blocks = 5,
+        max_fake_blocks = 6,
     },
     string_encoding = {
         enabled = true,
-        encoding_type = 'base64',
     },
     variable_renaming = {
         enabled = true,
         min_name_length = 8,
-        max_name_length = 12,
+        max_name_length = 16,
     },
     garbage_code = {
         enabled = true,
-        garbage_blocks = 3,
+        garbage_blocks = 4,
     },
     opaque_predicates = {
         enabled = true,
     },
     function_inlining = {
-        enabled = true,
+        enabled = false, --off because bugged
     },
     dynamic_code = {
-        enabled = true,
+        enabled = false, --off because bugged
     },
     bytecode_encoding = {
+        enabled = true,
+    },
+    compressor = {
         enabled = true,
     }
 }
@@ -51,3 +54,4 @@ function config.get(key)
 end
 
 return config
+

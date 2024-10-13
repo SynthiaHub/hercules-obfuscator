@@ -1,8 +1,8 @@
 -- modules/watermark.lua
 local Watermark = {}
 
-function Watermark.add_watermark(code)
-    return "--[Obfuscated by Hercules]\n" .. code
+function Watermark.process(code)
+    return "--[Obfuscated by Hercules v1.5 | discord.gg/Hx6RuYs8Ku]\n" .. code
 end
 
 return Watermark
